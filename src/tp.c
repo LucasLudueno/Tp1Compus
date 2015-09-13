@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include "matrix.h"
 
 #define PIXELWIDTH 4
 #define PIXELHEIGHT 4
 #define MAGICNUMBER "P1"
 
 void writePbmImage(unsigned char* matrix, unsigned int n, FILE *file);
+
+void loadMatrix(Matrix* matrix, FILE* input);
 
 int main(int argc, char** argv) {
 
@@ -52,5 +55,13 @@ void writePbmImage(unsigned char* matrix, unsigned int n, FILE *file) {
 			}
 			putc('\n',file);
 		}
+	}
+}
+
+
+void loadMatrix(Matrix* matrix, FILE* input) {
+	for(int i=0; i < matrix->size; ++i) {
+		char cell = fgetc(input);
+		Matrix_write(matrix, cell, 0, i);
 	}
 }

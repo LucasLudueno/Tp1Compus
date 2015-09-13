@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-void Matrix_create(Matrix* self, unsigned int size) {
+void Matrix_create(Matrix* self, size_t size) {
 	self->ptr = malloc(size*size);
 	self->size = size;
 }

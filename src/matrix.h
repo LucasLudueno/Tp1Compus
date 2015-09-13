@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 typedef struct {
 	unsigned char* ptr;
 	size_t size;
