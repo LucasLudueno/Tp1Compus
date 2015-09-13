@@ -9,31 +9,32 @@ void writePbmImage(unsigned char* matrix, unsigned int n, FILE *file);
 
 void loadMatrix(Matrix* matrix, FILE* input);
 
+char proximo126(Matrix* matrix, size_t i, size_t j);
+
+
 int main(int argc, char** argv) {
-
+	// Initializations: 
 	unsigned int size = 4;
-	unsigned char matrix[size*size];
+	Matrix matrix;
+	Matrix_create(&matrix, size);
+	FILE* inputFile = fopen("input", "r");
+	loadMatrix(&matrix, inputFile);
 
-	matrix[0] = '0';
-	matrix[1] = '0';
-	matrix[2] = '0';
-	matrix[3] = '0';
-	matrix[4] = '0';
-	matrix[5] = '1';
-	matrix[6] = '0';
-	matrix[7] = '0';
-	matrix[8] = '0';
-	matrix[9] = '1';
-	matrix[10] = '1';
-	matrix[11] = '0';
-	matrix[12] = '0';
-	matrix[13] = '0';
-	matrix[14] = '0';
-	matrix[15] = '0';
+	// Processing:
+	char aux[size];
+	for(int timestamp = 1; timestamp < size; ++timestamp) {
+		for(int col = 0; col < size; ++col) {
+			aux[col] = proximo126(&matrix, timestamp, col);
+		}
+		Matrix_copy_row(&matrix, aux, timestamp);
+	}
 
+	// Writing the output:
 	FILE *file = fopen("prueba.pbm", "w+");
-	writePbmImage(matrix, size, file);
+	writePbmImage(matrix.ptr, size, file);
 	fclose(file);
+
+	Matrix_destroy(&matrix);
 	return 0;
 }
 
@@ -64,4 +65,23 @@ void loadMatrix(Matrix* matrix, FILE* input) {
 		char cell = fgetc(input);
 		Matrix_write(matrix, cell, 0, i);
 	}
+}
+
+char proximo126(Matrix* matrix, size_t i, size_t j) {
+	char left, right, actual;
+	if (j > 0) {
+		left = Matrix_read(matrix, i-1, j-1);
+	} else {
+		left = Matrix_read(matrix, i-1, matrix->size - 1);
+	}
+	if (j != matrix->size - 1) {
+		right = Matrix_read(matrix, i-1, j+1);
+	} else {
+		right = Matrix_read(matrix, i-1, 0);
+	}
+	actual = Matrix_read(matrix, i-1, j);
+	if (left == right && left == actual && right == actual)
+		return '0';
+	else
+		return '1';
 }
