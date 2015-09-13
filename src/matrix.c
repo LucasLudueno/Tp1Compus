@@ -7,6 +7,12 @@ void Matrix_create(Matrix* self, unsigned int size) {
 	self->size = size;
 }
 
+
+void Matrix_write(Matrix* self, char value, size_t row, size_t column) {
+	self->ptr[self->size*row + column] = value;
+}
+
+
 void Matrix_destroy(Matrix* self) {
 	free(self->ptr);
 }
