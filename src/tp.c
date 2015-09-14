@@ -1,11 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include "matrix.h"
 
 #define PIXELWIDTH 4
 #define PIXELHEIGHT 4
 #define MAGICNUMBER "P1"
 
-void writePbmImage(unsigned char* matrix, unsigned int n, FILE *file);
+#define HELPCODE "-h"
+#define VERSIONCODE "-V"
+
+void writePbmImage(Matrix* matrix, unsigned int n, FILE *file);
 
 void loadMatrix(Matrix* matrix, FILE* input);
 
@@ -13,12 +19,12 @@ int main(int argc, char** argv) {
 
 	FILE *fileInput;
 	FILE *fileOutput;
-	//unsigned int rule;
+	unsigned char rule;
 	unsigned int size;
 	char help[] = HELPCODE;
 	char version[] = VERSIONCODE;
 
-	if ( !strcmp(argv[1], help) ) {
+	if ( !strcmp(argv[1], help) ) {		// HAY ALGUNA FORMA DE PONERLO MAS LINDO ESTO ?
 		printf("Uso: \n");
 		printf("autcel -h\n");
 		printf("autcel -V \n");
@@ -40,42 +46,34 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	//rule = atoi(argv[1]);
+	rule = atoi(argv[1]);
 	size = atoi(argv[2]);
-	unsigned char matrix[size*size];
 
-	fileInput = fopen( strcat (argv[3],".txt"), "r");
+	fileInput = fopen( argv[3], "r");
 	if (argc > 4) {
-		fileOutput = fopen( strcat (argv[5],".pbm"), "w+");
+		fileOutput = fopen(strcat(argv[5],".pbm"), "w+");
 	} else {
-		fileOutput = fopen( strcat (argv[3],".pbm"), "w+");
+		fileOutput = fopen(strcat(argv[3],".pbm"), "w+");
 	}
 
-	matrix[0] = '0';
-	matrix[1] = '0';
-	matrix[2] = '0';
-	matrix[3] = '0';
-	matrix[4] = '0';
-	matrix[5] = '1';
-	matrix[6] = '0';
-	matrix[7] = '0';
-	matrix[8] = '0';
-	matrix[9] = '1';
-	matrix[10] = '1';
-	matrix[11] = '0';
-	matrix[12] = '0';
-	matrix[13] = '0';
-	matrix[14] = '0';
-	matrix[15] = '0';
+	Matrix* matrix = malloc(sizeof(Matrix));
+	Matrix_create(matrix, size);
 
+	printf("Leyendo estado inicial...\n");
+	loadMatrix(matrix, fileInput);
+	Extend(matrix, rule);
+	printf("Grabando %s.pbm\n","NOMBRE DEL ARCHIVO");
 	writePbmImage(matrix, size, fileOutput);
+	printf("Listo\n");
+
+	Matrix_destroy(matrix);
 	fclose(fileInput);
 	fclose(fileOutput);
 	return 0;
 }
 
 
-void writePbmImage(unsigned char* matrix, unsigned int n, FILE *file) {
+void writePbmImage(Matrix* matrix, unsigned int n, FILE *file) {
 	int width = PIXELWIDTH;
 	int height = PIXELHEIGHT;
 
@@ -86,8 +84,8 @@ void writePbmImage(unsigned char* matrix, unsigned int n, FILE *file) {
 		for (int pixY = 0; pixY < height; ++pixY) {
 			for (int j = 0; j < n; ++j) {
 				for (int pixX = 0; pixX < width; ++pixX) {
-					unsigned int pos = n*i + j;
-					fprintf(file, "%c ", matrix[ pos ]);
+					unsigned char value = Matrix_read(matrix, i, j);
+					fprintf(file, "%d ", value);
 				}
 			}
 			putc('\n',file);
@@ -97,8 +95,9 @@ void writePbmImage(unsigned char* matrix, unsigned int n, FILE *file) {
 
 
 void loadMatrix(Matrix* matrix, FILE* input) {
-	for(int i=0; i < matrix->size; ++i) {
-		char cell = fgetc(input);
-		Matrix_write(matrix, cell, 0, i);
+	for(int j=0; j < matrix->size; ++j) {
+		char c = fgetc(input);
+		unsigned char cell = atoi(&c);
+		Matrix_write(matrix, cell, 0, j);
 	}
 }
