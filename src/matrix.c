@@ -3,6 +3,10 @@
 
 unsigned char proximo126(Matrix* matrix, size_t i, size_t j, unsigned char rule);
 
+unsigned char proximo(unsigned char *a,
+					  unsigned int i, unsigned int j,
+					  unsigned char regla, unsigned int N);
+
 void Matrix_create(Matrix* self, size_t size) {
 	self->ptr = malloc(size*size);
 	self->size = size;
@@ -23,14 +27,37 @@ void Matrix_destroy(Matrix* self) {
 }
 
 void Extend(Matrix* self, unsigned char rule) {
-	for (size_t i = 0; i < self->size-1; ++i) {
-		for (size_t j = 0; j < self->size; ++j ) {
-			unsigned char value = proximo126(self, i, j, rule);
+	for (unsigned int i = 0; i < self->size-1; ++i) {
+		for (unsigned int j = 0; j < self->size; ++j ) {
+			//unsigned char value = proximo126(self, i, j, rule);
+			unsigned char value = proximo(self->ptr, i, j, rule, self->size);
 			Matrix_write(self, value, i+1, j);
 		}
 	}
 }
 
+unsigned char proximo(unsigned char *a,
+					  unsigned int i, unsigned int j,
+					  unsigned char regla, unsigned int N) {
+	unsigned char left, right, actual;
+	if (j > 0) {
+		left = *(a + i*N + j-1);
+	} else {
+		left = *(a + i*N + N-1);
+	}
+	if (j != N-1) {
+		right = *(a + i*N + j+1);
+	} else {
+		right = *(a + i*N);
+	}
+	actual = *(a + i*N + j);
+
+	int pos = right + actual*2 + left*4;
+	unsigned char value = (regla << (8 - pos - 1));
+	value = (value >> (8 - 1));
+
+	return value;
+}
 
 unsigned char proximo126(Matrix* matrix, size_t i, size_t j, unsigned char rule) {
 	unsigned char left, right, actual;
