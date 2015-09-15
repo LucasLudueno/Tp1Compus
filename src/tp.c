@@ -13,9 +13,13 @@
 
 void writePbmImage(Matrix* matrix, unsigned int n, FILE *file);
 
-void loadMatrix(Matrix* matrix, FILE* input);
+int loadMatrix(Matrix* matrix, FILE* input);
 
 int main(int argc, char** argv) {
+
+	if (argc < 2) {
+		return 1;
+	}
 
 	FILE *fileInput;
 	FILE *fileOutput;
@@ -49,24 +53,34 @@ int main(int argc, char** argv) {
 	rule = atoi(argv[1]);
 	size = atoi(argv[2]);
 
-	fileInput = fopen( argv[3], "r");
-	if (argc > 4) {
-		fileOutput = fopen(strcat(argv[5],".pbm"), "w+");
-	} else {
-		fileOutput = fopen(strcat(argv[3],".pbm"), "w+");
-	}
-
 	Matrix* matrix = malloc(sizeof(Matrix));
 	Matrix_create(matrix, size);
 
+	fileInput = fopen( argv[3], "r");
 	printf("Leyendo estado inicial...\n");
-	loadMatrix(matrix, fileInput);
+	if ( loadMatrix(matrix, fileInput) == 1) {
+		fprintf(stderr,"%s","Archivo de entrada erroneo\n");
+		Matrix_destroy(matrix);
+		free(matrix);
+		return 1;
+	}
+
+	char* fileOutputName;
+	if (argc > 4) {
+		fileOutputName = argv[5];
+		fileOutput = fopen(strcat(argv[5],".pbm"), "w+");
+	} else {
+		fileOutputName = argv[3];
+		fileOutput = fopen(strcat(argv[3],".pbm"), "w+");
+	}
+
 	Extend(matrix, rule);
-	printf("Grabando %s.pbm\n","NOMBRE DEL ARCHIVO");
+	printf("Grabando %s\n",fileOutputName);
 	writePbmImage(matrix, size, fileOutput);
 	printf("Listo\n");
 
 	Matrix_destroy(matrix);
+	free(matrix);
 	fclose(fileInput);
 	fclose(fileOutput);
 	return 0;
@@ -94,10 +108,18 @@ void writePbmImage(Matrix* matrix, unsigned int n, FILE *file) {
 }
 
 
-void loadMatrix(Matrix* matrix, FILE* input) {
+int loadMatrix(Matrix* matrix, FILE* input) {
 	for(int j=0; j < matrix->size; ++j) {
 		char c = fgetc(input);
 		unsigned char cell = atoi(&c);
+		if (cell != 0 && cell != 1 ) {
+			return 1;
+		}
 		Matrix_write(matrix, cell, 0, j);
 	}
+	fgetc(input);
+	if (fgetc(input) != EOF) {
+		return 1;
+	}
+	return 0;
 }
