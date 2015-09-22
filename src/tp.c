@@ -15,9 +15,12 @@ void writePbmImage(Matrix* matrix, unsigned int n, FILE *file);
 
 int loadMatrix(Matrix* matrix, FILE* input);
 
+void printHelpMenu();
+
 int main(int argc, char** argv) {
 
 	if (argc < 2) {
+		printHelpMenu();
 		return 1;
 	}
 
@@ -29,21 +32,7 @@ int main(int argc, char** argv) {
 	char version[] = VERSIONCODE;
 
 	if ( !strcmp(argv[1], help) ) {		// HAY ALGUNA FORMA DE PONERLO MAS LINDO ESTO ?
-		printf("Uso: \n");
-		printf("autcel -h\n");
-		printf("autcel -V \n");
-		printf("autcel R N inputfile [-o outputprefix]\n");
-		printf("Opciones: \n");
-		printf("-h, --help	Imprime este mensaje.\n");
-		printf("-V, --version	Da la versión del programa.\n");
-		printf("-o  Prefijo de los archivos de salida.\n");
-		printf("Ejemplos:\n");
-		printf("autcel 30 80 inicial -o evolucion\n");
-		printf("Calcula la evolucion del automata Regla 30\n");
-		printf("en un mundo unidimensional de 80 celdas, por 80 iteraciones.\n");
-		printf("El archivo de salida se llamara evolucion.pbm.\n");
-		printf("Si no se da un prefijo para los archivos de salida,\n");
-		printf("el prefijo será el nombre del archivo de entrada.\n");
+		printHelpMenu();
 		return 0;
 	} else if ( !strcmp(argv[1], version) ) {
 		printf("Autcel Version C\n");
@@ -94,10 +83,11 @@ void writePbmImage(Matrix* matrix, unsigned int n, FILE *file) {
 	fprintf(file, "%s\n", MAGICNUMBER);						// Header
 	fprintf(file, "%d %d\n", n*PIXELWIDTH, n*PIXELHEIGHT); 	// Width and Height
 
-	for (int i = 0; i < n; ++i) {							// Writing the image
-		for (int pixY = 0; pixY < height; ++pixY) {
-			for (int j = 0; j < n; ++j) {
-				for (int pixX = 0; pixX < width; ++pixX) {
+	int i, pixY, j, pixX;
+	for (i = 0; i < n; ++i) {							// Writing the image
+		for (pixY = 0; pixY < height; ++pixY) {
+			for (j = 0; j < n; ++j) {
+				for (pixX = 0; pixX < width; ++pixX) {
 					unsigned char value = Matrix_read(matrix, i, j);
 					fprintf(file, "%d ", value);
 				}
@@ -109,7 +99,8 @@ void writePbmImage(Matrix* matrix, unsigned int n, FILE *file) {
 
 
 int loadMatrix(Matrix* matrix, FILE* input) {
-	for(int j=0; j < matrix->size; ++j) {
+	int j;
+	for(j = 0; j < matrix->size; ++j) {
 		char c = fgetc(input);
 		unsigned char cell = atoi(&c);
 		if (cell != 0 && cell != 1 ) {
@@ -122,4 +113,23 @@ int loadMatrix(Matrix* matrix, FILE* input) {
 		return 1;
 	}
 	return 0;
+}
+
+
+void printHelpMenu() {
+	printf("Uso: \n");
+	printf("\tautcel -h\n");
+	printf("\tautcel -V \n");
+	printf("\tautcel R N inputfile [-o outputprefix]\n");
+	printf("Opciones: \n");
+	printf("\t-h, --help	Imprime este mensaje.\n");
+	printf("\t-V, --version	Da la versión del programa.\n");
+	printf("\t-o  Prefijo de los archivos de salida.\n");
+	printf("Ejemplos:\n");
+	printf("\tautcel 30 80 inicial -o evolucion\n");
+	printf("\tCalcula la evolucion del automata Regla 30\n");
+	printf("\ten un mundo unidimensional de 80 celdas, por 80 iteraciones.\n");
+	printf("\tEl archivo de salida se llamara evolucion.pbm.\n");
+	printf("\tSi no se da un prefijo para los archivos de salida,\n");
+	printf("\tel prefijo será el nombre del archivo de entrada.\n");
 }
