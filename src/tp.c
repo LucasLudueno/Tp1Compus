@@ -9,7 +9,9 @@
 #define MAGICNUMBER "P1"
 
 #define HELPCODE "-h"
+#define HELPCODE_LONG "--version"
 #define VERSIONCODE "-V"
+#define VERSIONCODE_LONG "--version"
 
 void writePbmImage(Matrix* matrix, unsigned int n, FILE *file);
 
@@ -29,12 +31,14 @@ int main(int argc, char** argv) {
 	unsigned char rule;
 	unsigned int size;
 	char help[] = HELPCODE;
+	char helpLong[] = HELPCODE_LONG;
 	char version[] = VERSIONCODE;
+	char versionLong[] = VERSIONCODE_LONG;
 
-	if ( !strcmp(argv[1], help) ) {
+	if ( !strcmp(argv[1], help) || !strcmp(argv[1], helpLong) ) {
 		printHelpMenu();
 		return EXIT_SUCCESS;
-	} else if ( !strcmp(argv[1], version) ) {
+	} else if ( !strcmp(argv[1], version) || !strcmp(argv[1], versionLong) {
 		printf("Autcel Version C\n");
 		return EXIT_SUCCESS;
 	}
