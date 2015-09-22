@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 	if ( !strcmp(argv[1], help) || !strcmp(argv[1], helpLong) ) {
 		printHelpMenu();
 		return EXIT_SUCCESS;
-	} else if ( !strcmp(argv[1], version) || !strcmp(argv[1], versionLong) {
+	} else if ( !strcmp(argv[1], version) || !strcmp(argv[1], versionLong) ) {
 		printf("Autcel Version C\n");
 		return EXIT_SUCCESS;
 	}
