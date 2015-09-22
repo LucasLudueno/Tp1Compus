@@ -1,8 +1,6 @@
 #include "matrix.h"
 #include <stdlib.h>
 
-unsigned char proximo126(Matrix* matrix, size_t i, size_t j, unsigned char rule);
-
 unsigned char proximo(unsigned char *a,
 					  unsigned int i, unsigned int j,
 					  unsigned char regla, unsigned int N);
@@ -29,7 +27,6 @@ void Matrix_destroy(Matrix* self) {
 void Extend(Matrix* self, unsigned char rule) {
 	for (unsigned int i = 0; i < self->size-1; ++i) {
 		for (unsigned int j = 0; j < self->size; ++j ) {
-			//unsigned char value = proximo126(self, i, j, rule);
 			unsigned char value = proximo(self->ptr, i, j, rule, self->size);
 			Matrix_write(self, value, i+1, j);
 		}
@@ -54,27 +51,6 @@ unsigned char proximo(unsigned char *a,
 
 	int pos = right + actual*2 + left*4;
 	unsigned char value = (regla << (8 - pos - 1));
-	value = (value >> (8 - 1));
-
-	return value;
-}
-
-unsigned char proximo126(Matrix* matrix, size_t i, size_t j, unsigned char rule) {
-	unsigned char left, right, actual;
-	if (j > 0) {
-		left = Matrix_read(matrix, i, j-1);
-	} else {
-		left = Matrix_read(matrix, i, matrix->size - 1);
-	}
-	if (j != matrix->size - 1) {
-		right = Matrix_read(matrix, i, j+1);
-	} else {
-		right = Matrix_read(matrix, i, 0);
-	}
-	actual = Matrix_read(matrix, i, j);
-
-	int pos = right + actual*2 + left*4;
-	unsigned char value = (rule << (8 - pos - 1));
 	value = (value >> (8 - 1));
 
 	return value;
