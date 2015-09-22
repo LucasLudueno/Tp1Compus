@@ -83,10 +83,11 @@ void writePbmImage(Matrix* matrix, unsigned int n, FILE *file) {
 	fprintf(file, "%s\n", MAGICNUMBER);						// Header
 	fprintf(file, "%d %d\n", n*PIXELWIDTH, n*PIXELHEIGHT); 	// Width and Height
 
-	for (int i = 0; i < n; ++i) {							// Writing the image
-		for (int pixY = 0; pixY < height; ++pixY) {
-			for (int j = 0; j < n; ++j) {
-				for (int pixX = 0; pixX < width; ++pixX) {
+	int i, pixY, j, pixX;
+	for (i = 0; i < n; ++i) {							// Writing the image
+		for (pixY = 0; pixY < height; ++pixY) {
+			for (j = 0; j < n; ++j) {
+				for (pixX = 0; pixX < width; ++pixX) {
 					unsigned char value = Matrix_read(matrix, i, j);
 					fprintf(file, "%d ", value);
 				}
@@ -98,7 +99,8 @@ void writePbmImage(Matrix* matrix, unsigned int n, FILE *file) {
 
 
 int loadMatrix(Matrix* matrix, FILE* input) {
-	for(int j=0; j < matrix->size; ++j) {
+	int j;
+	for(j = 0; j < matrix->size; ++j) {
 		char c = fgetc(input);
 		unsigned char cell = atoi(&c);
 		if (cell != 0 && cell != 1 ) {

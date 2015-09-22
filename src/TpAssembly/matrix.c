@@ -25,8 +25,9 @@ void Matrix_destroy(Matrix* self) {
 }
 
 void Extend(Matrix* self, unsigned char rule) {
-	for (unsigned int i = 0; i < self->size-1; ++i) {
-		for (unsigned int j = 0; j < self->size; ++j ) {
+	unsigned int i, j;
+	for (i = 0; i < self->size-1; ++i) {
+		for (j = 0; j < self->size; ++j ) {
 			unsigned char value = proximo(self->ptr, i, j, rule, self->size);
 			Matrix_write(self, value, i+1, j);
 		}
