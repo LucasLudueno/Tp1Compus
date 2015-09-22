@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
 	if (argc < 2) {
 		printHelpMenu();
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	FILE *fileInput;
@@ -31,27 +31,26 @@ int main(int argc, char** argv) {
 	char help[] = HELPCODE;
 	char version[] = VERSIONCODE;
 
-	if ( !strcmp(argv[1], help) ) {		// HAY ALGUNA FORMA DE PONERLO MAS LINDO ESTO ?
+	if ( !strcmp(argv[1], help) ) {
 		printHelpMenu();
-		return 0;
+		return EXIT_SUCCESS;
 	} else if ( !strcmp(argv[1], version) ) {
 		printf("Autcel Version Assembly\n");
-		return 0;
+		return EXIT_SUCCESS;
 	}
 
 	rule = atoi(argv[1]);
 	size = atoi(argv[2]);
 
-	Matrix* matrix = malloc(sizeof(Matrix));
-	Matrix_create(matrix, size);
+	Matrix matrix;
+	Matrix_create(&matrix, size);
 
 	fileInput = fopen( argv[3], "r");
 	printf("Leyendo estado inicial...\n");
-	if ( loadMatrix(matrix, fileInput) == 1) {
+	if ( loadMatrix(&matrix, fileInput) == EXIT_FAILURE) {
 		fprintf(stderr,"%s","Archivo de entrada erroneo\n");
-		Matrix_destroy(matrix);
-		free(matrix);
-		return 1;
+		Matrix_destroy(&matrix);
+		return EXIT_FAILURE;
 	}
 
 	char* fileOutputName;
@@ -63,16 +62,15 @@ int main(int argc, char** argv) {
 		fileOutput = fopen(strcat(argv[3],".pbm"), "w+");
 	}
 
-	Extend(matrix, rule);
+	Extend(&matrix, rule);
 	printf("Grabando %s\n",fileOutputName);
-	writePbmImage(matrix, size, fileOutput);
+	writePbmImage(&matrix, size, fileOutput);
 	printf("Listo\n");
 
-	Matrix_destroy(matrix);
-	free(matrix);
+	Matrix_destroy(&matrix);
 	fclose(fileInput);
 	fclose(fileOutput);
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 
