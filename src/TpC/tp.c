@@ -125,7 +125,7 @@ void printHelpMenu() {
 	printf("\tautcel R N inputfile [-o outputprefix]\n");
 	printf("Opciones: \n");
 	printf("\t-h, --help	Imprime este mensaje.\n");
-	printf("\t-V, --version	Da la versión del programa.\n");
+	printf("\t-V, --version	Da la version del programa.\n");
 	printf("\t-o  Prefijo de los archivos de salida.\n");
 	printf("Ejemplos:\n");
 	printf("\tautcel 30 80 inicial -o evolucion\n");
@@ -133,5 +133,6 @@ void printHelpMenu() {
 	printf("\ten un mundo unidimensional de 80 celdas, por 80 iteraciones.\n");
 	printf("\tEl archivo de salida se llamara evolucion.pbm.\n");
 	printf("\tSi no se da un prefijo para los archivos de salida,\n");
-	printf("\tel prefijo será el nombre del archivo de entrada.\n");
+	printf("\tel prefijo sera el nombre del archivo de entrada.\n");
 }
+
