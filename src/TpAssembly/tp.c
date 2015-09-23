@@ -135,7 +135,4 @@ void printHelpMenu() {
 	printf("\tSi no se da un prefijo para los archivos de salida,\n");
 	printf("\tel prefijo sera el nombre del archivo de entrada.\n");
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> a11f76cbc5334cc19a2c8a98be545bdebb8f27a6

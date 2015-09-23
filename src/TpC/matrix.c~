@@ -55,4 +55,3 @@ unsigned char proximo(unsigned char *a,
 
 	return value;
 }
-
