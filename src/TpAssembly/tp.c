@@ -125,7 +125,7 @@ void printHelpMenu() {
 	printf("\tautcel R N inputfile [-o outputprefix]\n");
 	printf("Opciones: \n");
 	printf("\t-h, --help	Imprime este mensaje.\n");
-	printf("\t-V, --version	Da la versión del programa.\n");
+	printf("\t-V, --version	Da la version del programa.\n");
 	printf("\t-o  Prefijo de los archivos de salida.\n");
 	printf("Ejemplos:\n");
 	printf("\tautcel 30 80 inicial -o evolucion\n");
