@@ -133,5 +133,5 @@ void printHelpMenu() {
 	printf("\ten un mundo unidimensional de 80 celdas, por 80 iteraciones.\n");
 	printf("\tEl archivo de salida se llamara evolucion.pbm.\n");
 	printf("\tSi no se da un prefijo para los archivos de salida,\n");
-	printf("\tel prefijo será el nombre del archivo de entrada.\n");
+	printf("\tel prefijo sera el nombre del archivo de entrada.\n");
 }
