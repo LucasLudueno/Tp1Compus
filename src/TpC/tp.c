@@ -14,7 +14,7 @@
 #define HELPCODE_LONG "--version"
 #define VERSIONCODE "-V"
 #define VERSIONCODE_LONG "--version"
-
+/*
 
 void writePbmImage(Matrix* matrix, unsigned int n, FILE *file);
 
@@ -145,3 +145,4 @@ void printHelpMenu() {
     printf("\tel prefijo sera el nombre del archivo de entrada.\n");
 }
 
+*/

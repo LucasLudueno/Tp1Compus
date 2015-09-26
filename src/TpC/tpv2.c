@@ -15,8 +15,8 @@
 #define INVALID_OPTION -2
 #define NO_OPTIONS -3
 #define ERR_CANT_ARGS -4
+#define SALIDA_TERMINAL 1
 
-/*
 
 void writePbmImage(Matrix* matrix, unsigned int n, FILE *file);
 
@@ -34,56 +34,77 @@ int validar(FILE* streamSalida, int argc, char** argv);
 // Funcion que imprime cuando es una opcion no reconocida por el programa  
 int invalidOpt(FILE* streamSalida);
 
-
 int main(int argc, char** argv) {
 
-    FILE *fileInput;
-    FILE *fileOutput;
-    unsigned char rule;
-    unsigned int size;
+    FILE *fileInput = NULL;
+    FILE *fileOutput = NULL;
+    char* fileOutputName = NULL;
+    char* fileInputName = NULL;
+    unsigned char rule = 0;
+    unsigned int size = 0;
     int option = 0;
-    int returnCode = NO_OPTIONS;
-    const char* opcionesCortas = "Vho::"; // o tiene un arg. opcional
+    int terminal = 0;
+    int estado = 0;
+    const char* opcionesCortas = "Vhto::"; // o tiene un arg. opcional
     const struct option opcionesLargas[] = {
         { "version", 0, NULL, 'V'},
         { "help", 0, NULL, 'h'},
+        { "term", 0, NULL, 't'},
         { "out", 1, NULL, 'o'},
         { NULL, 0, NULL, 0},
     };
-
+    if (argc > 2) {
+        rule = atoi(argv[1]);
+        size = atoi(argv[2]);
+    }
     // Comienzo de la validacion de argumentos 
     while ((option = getopt_long(argc, argv, opcionesCortas, opcionesLargas,
             NULL)) != -1) {
 
         switch (option) {
             case 'h': // -h o --help 
-                returnCode = printHelp(stdout);
-                break;
+                printHelp(stdout);
+                exit(EXIT_SUCCESS);
             case 'V': // -V o --version 
-                returnCode = printVersion(stdout);
+                printVersion(stdout);
+                exit(EXIT_SUCCESS);
+            case 't': // -t o --terminal
+                terminal = SALIDA_TERMINAL;
+                estado = PROCESSING;
                 break;
-            case 'o': // -o o --out 
-                returnCode = validar(stderr, argc, argv);
+            case 'o': // -o , --out
+                fileInputName = argv[3];
+                // if (optarg == NULL)
+                // es una truchada pero no pude hacer andar optarg
+
+                if (argv[5] == NULL || (!strcmp(argv[5], "-t") ||
+                        !strcmp(argv[5], "--terminal")))
+                    fileOutputName = argv[3];
+                else
+                    fileOutputName = argv[5];
+
+                //fileOutputName = optarg;
+                estado = PROCESSING;
                 break;
             default:
-                returnCode = invalidOpt(stderr);
+                invalidOpt(stderr);
+                exit(EXIT_FAILURE);
         }
     }
-
-    if (returnCode != PROCESSING) {
-        fprintf(stdout, "codigo de retorno: %d \n", returnCode);
-        return returnCode;
+    if (estado != PROCESSING) {
+        printf("la ejecucion es del tipo ./autcel 30 80 input -o \n");
+        exit(EXIT_FAILURE);
     }
-    rule = atoi(argv[2]);
-    size = atoi(argv[3]);
-    
-    // printf("%s-%s-%s-%s-%s-%s \n", argv[0], argv[1], argv[2], argv[3],
-    // argv[4], argv[5]);
-    fileInput = fopen(argv[4], "r");
+
+    // printf("%s-%s-%s-%s-%s-%s-%s \n", argv[0], argv[1], argv[2], argv[3],
+          //  argv[4], argv[5], argv[6]);
+    fileInput = fopen(fileInputName, "r");
     if (fileInput == NULL) {
         printf("Error en el archivo de entrada\n");
         return EXIT_FAILURE;
     }
+
+
     Matrix matrix;
     Matrix_create(&matrix, size);
     printf("Leyendo estado inicial...\n");
@@ -93,27 +114,14 @@ int main(int argc, char** argv) {
         return INPUT_ERROR;
     }
 
-    char* fileOutputName;
-    int terminal = 0;
-    if (argc > 5) {
-        fileOutputName = argv[5];
-        fileOutput = fopen(strcat(argv[5], ".pbm"), "w+");
-    } else {
-        // fileOutputName = argv[4];
-        // fileOutput = fopen(strcat(argv[4], ".pbm"), "w+");
-        terminal = 1;
-    }
-
     Extend(&matrix, rule, terminal);
-    if (terminal == 0) {
-        printf("Grabando %s\n", fileOutputName);
-        writePbmImage(&matrix, size, fileOutput);
-        printf("Listo\n");
-        fclose(fileOutput);
-    }
+    printf("Grabando %s\n", fileOutputName);
+    fileOutput = fopen(strcat(fileOutputName, ".pbm"), "w+");
+    writePbmImage(&matrix, size, fileOutput);
+    printf("Listo\n");
     Matrix_destroy(&matrix);
     fclose(fileInput);
-
+    fclose(fileOutput);
     return EXIT_SUCCESS;
 
 }
@@ -158,7 +166,7 @@ int printHelp(FILE* streamSalida) {
     fprintf(streamSalida, "Uso: \n");
     fprintf(streamSalida, "autcel -h\n");
     fprintf(streamSalida, "autcel -V \n");
-    fprintf(streamSalida, "autcel R N inputfile [-o outputprefix]\n");
+    fprintf(streamSalida, "autcel R N inputfile [-o outputprefix] -t \n");
     fprintf(streamSalida, "Opciones: \n");
     fprintf(streamSalida, "-h, --help	Imprime este mensaje.\n");
     fprintf(streamSalida, "-V, --version    Da la versión del programa.\n");
@@ -172,6 +180,9 @@ int printHelp(FILE* streamSalida) {
     fprintf(streamSalida, "Si no se da un prefijo para los archivos de "
             "salida,\n");
     fprintf(streamSalida, "el prefijo será el nombre del archivo de entrada.\n");
+    fprintf(streamSalida, "autcel 30 80 inicial -o evolucion -t\n");
+    fprintf(streamSalida, "para imprimir tambien por pantalla la evolucion.\n");
+
     return EXIT_SUCCESS;
 }
 
@@ -193,4 +204,3 @@ int invalidOpt(FILE* streamSalida) {
     fprintf(streamSalida, "TP1: Opción invalida \n");
     return INVALID_OPTION;
 }
-*/
