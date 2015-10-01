@@ -7,21 +7,21 @@ Devolución: Jueves 1° de octubre, 2015
   
   
 ### Versión Assembly  
-El mismo se compila cómo:   
+El mismo se compila cómo:
+```text```
 gcc -c proximo.S  
 gcc -std=c99 -c matrix.c  
 gcc -std=c99 -c tp.c  
 gcc proximo.o matrix.o tp.o -o autcel  
-  
+```
   
 ### Versión C  
-El mismo se compila cómo:  
+El mismo se compila cómo:
 ```text```
 gcc -std=c99 -c matrix.c  
 gcc -std=c99 -c tp.c  
 gcc matrix.o tp.o -o autcel  
 ```
-  
 O ejecutando el makefile que se provee.  
   
   
@@ -34,7 +34,7 @@ archivo de salida donde se cargará la imagen generada (este último parámetro 
 opcional; en caso de no indicarse, el archivo de salida tendra el mismo nombre 
 que el de entrada + .pbm).  
 Implementado la primera mejora, salida por consola, para su uso utilizar -t 
-o --terminal. Ejemplo:  
+o --terminal. Ejemplo:
 ```text```
 ./autcel 30 80  input -o output -t
 ```
