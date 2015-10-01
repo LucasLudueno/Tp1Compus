@@ -166,11 +166,12 @@ int printHelp(FILE* streamSalida) {
     fprintf(streamSalida, "Uso: \n");
     fprintf(streamSalida, "autcel -h\n");
     fprintf(streamSalida, "autcel -V \n");
-    fprintf(streamSalida, "autcel R N inputfile [-o outputprefix] -t \n");
+    fprintf(streamSalida, "autcel R N inputfile [-o outputprefix[ -t \n");
     fprintf(streamSalida, "Opciones: \n");
     fprintf(streamSalida, "-h, --help	Imprime este mensaje.\n");
     fprintf(streamSalida, "-V, --version    Da la versión del programa.\n");
     fprintf(streamSalida, "-o  Prefijo de los archivos de salida.\n");
+    fprintf(streamSalida, "-t, --terminal   Imprime los resultados tambien en consola\n\n");
     fprintf(streamSalida, "Ejemplos:\n");
     fprintf(streamSalida, "autcel 30 80 inicial -o evolucion\n");
     fprintf(streamSalida, "Calcula la evolucion del automata Regla 30\n");
