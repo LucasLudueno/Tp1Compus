@@ -13,10 +13,9 @@ proximo:
 				
 		 lw t0,24(sp)			# a0 = dir(a), a1 = i, a2 = j, a3 = regla, t0 = n
 		 
-		 addu t3,a1,zero		# t3 = i
-		 subu t4,t0,1			# t4 = n - 1
-		 b MULT_POR_N			# 't3' = i*n		 
-RET_MULT_POT_N:					
+		 mult a1,t0			
+		 mflo t3		 		# 't3' = i*n	
+		 
 								# Calculo left
 		 beq a2,zero,J_CERO		# Salto si j == 0									
 		 subu t2,a2,1			# t2 = j-1
@@ -71,10 +70,4 @@ J_N:
 		addu t2,zero,zero		# t2 = 0
 		b REGRESO_J_N
 	
-MULT_POR_N: 
-		beq t4,zero, RET_MULT_POT_N		# Resto 1 a t4 hasta que t3 = i*n, t4 = 0
-		addu t3,t3,a1					# t3 = t3 + i
-		subu t4,t4,1					# t4 = t4 - 1
-		b MULT_POR_N
-
 		.end proximo
