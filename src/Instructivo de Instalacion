@@ -24,5 +24,9 @@ Para utilizar el mismo se debe indicar un archivo de entrada donde se encontrar�
 la primera fila de la matriz a expandir, el largo que la matriz tendrá (que debe 
 ser consistente con el archivo de entrada), la regla para expandir la matriz y el 
 archivo de salida donde se cargará la imagen generada (este último parámetro es 
-opcional; en caso de no indicarse, se generará un archivo de salida con el mismo 
-nombre que el de entrada)
+opcional; en caso de no indicarse, el archivo de salida tendra el mismo nombre 
+que el de entrada + .pbm).
+Implementado la primera mejora, salida por consola, para su uso utilizar -t 
+o --terminal.
+ ejem: ./autcel 30 80  input -o output -t
+ 

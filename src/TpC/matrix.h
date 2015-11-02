@@ -19,4 +19,4 @@ void Matrix_destroy(Matrix* self);
 char Matrix_read(Matrix* self, size_t row, size_t column);
 
 /* Extends the matrix from a rule */
-void Extend(Matrix* self, unsigned char rule);
+void Extend(Matrix* self, unsigned char rule, int terminal);
